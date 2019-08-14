@@ -1,0 +1,22 @@
+#!/bin/bash
+
+LOG=/var/log/s3-backup.log
+LOCK=/tmp/s3-backup
+
+exec 1>>$LOG 2>&1
+
+echo "Current PID: $$"
+
+set -xeuo pipefail
+
+exec 200>$LOCK
+flock -n 200 || exit 1
+
+folders=(
+"PROJECTS_NAS"
+"Library_Dave"
+)
+
+for folder in "${folders[@]}"; do
+	aws s3 sync "/data/$folder" "s3://davidspittlebackups/$folder" --delete --storage-class STANDARD_IA
+done
