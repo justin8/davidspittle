@@ -1,0 +1,20 @@
+---
+- name: copy s3-backup.sh
+  template:
+    src: s3-backup.sh.j2
+    dest: /usr/local/bin/s3-backup.sh
+- name: copy s3-backup.service
+  template:
+    src: s3-backup.service.j2
+    dest: /etc/systemd/system/s3-backup.service
+- name: copy s3-backup.timer
+  template:
+    src: s3-backup.timer.j2
+    dest: /etc/systemd/system/s3-backup.timer
+  notify:
+  - daemon-reload
+  - re-enable s3-backup timer
+- name: copy awslogs.conf
+  template:
+    src: awslogs.conf.j2
+    dest: /var/awslogs/etc/awslogs.conf

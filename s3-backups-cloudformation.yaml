@@ -1,0 +1,56 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ReadyNASUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: readynas
+  CloudwatchLogsWriterPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CloudwatchLogsWriterPolicy
+      Users:
+        - Ref: ReadyNASUser 
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          - logs:DescribeLogStreams
+          Resource:
+          - arn:aws:logs:*:*:*
+  S3BackupsWriterPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: S3BackupsWriter
+      Users:
+        - Ref: ReadyNASUser 
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: 0
+          Effect: Allow
+          Action:
+          - s3:*
+          Resource:
+          - arn:aws:s3:::davidspittlebackups
+          - arn:aws:s3:::davidspittlebackups/*
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: "/var/log/s3-backup.log"
+      RetentionInDays: 14
+  S3BackupErrorMetric:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "error"
+      LogGroupName:
+        Ref: LogGroup
+      MetricTransformations:
+        - MetricValue: 1
+          MetricNamespace: LogMetrics
+          MetricName: s3-backup-error
+          

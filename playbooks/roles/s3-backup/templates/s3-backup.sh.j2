@@ -18,5 +18,5 @@ folders=(
 )
 
 for folder in "${folders[@]}"; do
-	aws s3 sync "/data/$folder" "s3://davidspittlebackups/$folder" --delete --storage-class STANDARD_IA
+	aws s3 sync "/data/$folder" "s3://davidspittlebackups/$folder" --delete --storage-class DEEP_ARCHIVE
 done
