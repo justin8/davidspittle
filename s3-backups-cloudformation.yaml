@@ -53,4 +53,50 @@ Resources:
         - MetricValue: 1
           MetricNamespace: LogMetrics
           MetricName: s3-backup-error
-          
+  ErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Ref: AlarmsSNSTopic
+      AlarmName: s3-backups errors
+      EvaluationPeriods: 1
+      Statistic: Sum
+      MetricName: s3-backup-error
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 0
+      TreatMissingData: missing
+      AlarmDescription: The s3 backups script has encountered an error. Please check the logs.
+      Period: 300
+      Namespace: LogMetrics
+  NoLogsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Ref: AlarmsSNSTopic
+      AlarmName: s3-backups no logs
+      EvaluationPeriods: 2
+      Statistic: Sum
+      MetricName: IncomingLogEvents
+      ComparisonOperator: LessThanThreshold
+      Threshold: 20
+      TreatMissingData: breaching
+      AlarmDescription: The s3 backups script has encountered an error. Please check the logs.
+      Period: 3600
+      Namespace: AWS/Logs
+      Dimensions:
+        - Name: LogGroupName
+          Value:
+            Ref: LogGroup
+  AlarmsSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: s3-backups-alarms
+  AlarmsJustinSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: justin@dray.be
+      Protocol: email
+      TopicArn: 
+        Ref: AlarmsSNSTopic 
