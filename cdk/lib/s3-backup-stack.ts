@@ -25,7 +25,7 @@ export class s3BackupStack extends cdk.Stack {
 
     // IAM
     const readynas = new iam.User(this, 'readynas', {
-      userName: 'readynas2'
+      userName: 'readynas'
     });
 
     const cloudwatchLogsWriter = new iam.Policy(this, "cloudwatchLogsWriter", {
