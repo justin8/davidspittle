@@ -4,10 +4,10 @@
     - role: s3-backup
       bucket: davidspittlebackups
       schedule: daily
-      folder_root: /data/
+      folder_root: /data
       folders:
-        - PROJECTS_NAS
-        - Library_Dave
+        - /PROJECTS_NAS
+        - /Library_Dave
   tasks:
     - name: copy awslogs.conf
       template:
