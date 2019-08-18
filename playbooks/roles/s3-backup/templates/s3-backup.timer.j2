@@ -1,9 +1,0 @@
-[Unit]
-Description=Backup folders to s3
-
-[Timer]
-OnCalendar=daily
-Unit=s3-backup.service
-
-[Install]
-WantedBy=timers.target

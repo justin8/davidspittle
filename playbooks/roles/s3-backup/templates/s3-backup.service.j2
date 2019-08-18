@@ -1,8 +1,0 @@
-[Unit]
-Description=Backup folders to s3
-After=network.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/bin/s3-backup.sh
-RemainAfterExit=yes

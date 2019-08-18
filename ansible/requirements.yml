@@ -1,0 +1,3 @@
+---
+- src: https://github.com/justin8/ansible-s3-backup.git
+  name: s3-backup

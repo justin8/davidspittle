@@ -1,0 +1,22 @@
+---
+- hosts: davidspittle*
+  roles:
+    - role: s3-backup
+      bucket: davidspittlebackups
+      schedule: daily
+      profile: davidspittle
+      folder_root: /data/
+      folders:
+        - PROJECTS_NAS
+        - Library_Dave
+  tasks:
+    - name: copy awslogs.conf
+      template:
+        src: awslogs.conf.j2
+        dest: /var/awslogs/etc/awslogs.conf
+      notify: restart awslogs
+  handlers:
+    - name: restart awslogs
+      service:
+        name: awslogs
+        state: restarted

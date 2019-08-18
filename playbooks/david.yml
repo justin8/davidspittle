@@ -1,4 +1,0 @@
----
-- hosts: davidspittle*
-  roles:
-  - s3-backup
