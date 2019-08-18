@@ -1,8 +1,8 @@
 {
-  "name": "cdk",
+  "name": "backups",
   "version": "0.1.0",
   "bin": {
-    "cdk": "bin/cdk.js"
+    "backups": "bin/backups.js"
   },
   "scripts": {
     "build": "tsc",
