@@ -1,6 +1,6 @@
 import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam');
-import {Alarm, ComparisonOperator, Metric} from '@aws-cdk/aws-cloudwatch';
+import {Alarm, ComparisonOperator, Metric, TreatMissingData} from '@aws-cdk/aws-cloudwatch';
 import {SnsAction} from '@aws-cdk/aws-cloudwatch-actions';
 import {PolicyStatement, ManagedPolicy} from '@aws-cdk/aws-iam';
 import {FilterPattern, LogGroup, MetricFilter} from '@aws-cdk/aws-logs';
@@ -81,6 +81,7 @@ export class s3BackupStack extends cdk.Stack {
         threshold: 20,
         comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
         evaluationPeriods: 1,
+        treatMissingData: TreatMissingData.BREACHING,
         metric: new Metric({
           metricName: 'IncomingLogEvents',
           namespace: 'AWS/Logs',
