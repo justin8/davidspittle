@@ -78,7 +78,8 @@ export class s3BackupStack extends cdk.Stack {
         actionsEnabled: true,
         alarmDescription:
             'The S3 backup script has not logged any errors in a while. Please check the logs.',
-        threshold: 10,
+        threshold: 5,
+        statistic: 'sum',
         comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
         evaluationPeriods: 1,
         treatMissingData: TreatMissingData.BREACHING,
