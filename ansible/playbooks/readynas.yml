@@ -15,6 +15,7 @@
         src: awslogs.conf.j2
         dest: /var/awslogs/etc/awslogs.conf
       notify: restart awslogs
+
   handlers:
     - name: restart awslogs
       service:

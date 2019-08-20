@@ -1,2 +1,2 @@
 #!/bin/bash
-ansible-playbook playbooks/david.yml "$@"
+ansible-playbook playbooks/readynas.yml "$@"

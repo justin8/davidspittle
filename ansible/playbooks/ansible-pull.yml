@@ -1,0 +1,7 @@
+---
+- hosts: ReadyNAS01
+  vars:
+    ansible_pull_repo: git@github.com:justin8/davidspittle
+    ansible_pull_playbook: "{{ ansible_pull_workdir }}/ansible/playbooks/david.yml"
+  roles:
+    - role: ansible-pull
