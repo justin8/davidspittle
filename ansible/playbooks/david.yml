@@ -1,13 +1,14 @@
 ---
-- hosts: davidspittle*
+- hosts: ReadyNAS01
+  vars:
+    s3_backup_bucket: davidspittlebackups
+    s3_backup_schedule: daily
+    s3_backup_folder_root: /data
+    s3_backup_folders:
+      - /PROJECTS_NAS
+      - /Library_Dave
   roles:
     - role: s3-backup
-      bucket: davidspittlebackups
-      schedule: daily
-      folder_root: /data
-      folders:
-        - /PROJECTS_NAS
-        - /Library_Dave
   tasks:
     - name: copy awslogs.conf
       template:
