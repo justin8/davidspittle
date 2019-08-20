@@ -78,14 +78,14 @@ export class s3BackupStack extends cdk.Stack {
         actionsEnabled: true,
         alarmDescription:
             'The S3 backup script has not logged any errors in a while. Please check the logs.',
-        threshold: 20,
+        threshold: 10,
         comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
         evaluationPeriods: 1,
         treatMissingData: TreatMissingData.BREACHING,
         metric: new Metric({
           metricName: 'IncomingLogEvents',
           namespace: 'AWS/Logs',
-          period: cdk.Duration.hours(1),
+          period: cdk.Duration.days(1),
           dimensions: {LogGroupName: logGroup.logGroupName}
         })
       })
