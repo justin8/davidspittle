@@ -7,16 +7,18 @@ export interface alarmsStackProps {
 }
 
 export class alarmsStack extends cdk.Stack {
+  public alarmsTopic: Topic;
+
   constructor(scope: cdk.Construct, id: string, props: alarmsStackProps) {
     super(scope, id);
 
-    const alarmsTopic =
+    this.alarmsTopic =
         new Topic(this, 'alarmsTopic', {topicName: 'alarmsTopic'});
 
     for (let email of props.alarmEmails) {
       new Subscription(this, email, {
         protocol: SubscriptionProtocol.EMAIL,
-        topic: alarmsTopic,
+        topic: this.alarmsTopic,
         endpoint: email
       });
     }

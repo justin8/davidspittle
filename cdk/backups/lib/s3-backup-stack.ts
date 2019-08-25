@@ -1,28 +1,19 @@
 import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam');
-import {Alarm, ComparisonOperator, Metric, TreatMissingData} from '@aws-cdk/aws-cloudwatch';
 import {SnsAction} from '@aws-cdk/aws-cloudwatch-actions';
 import {PolicyStatement, ManagedPolicy} from '@aws-cdk/aws-iam';
 import {FilterPattern, LogGroup, MetricFilter} from '@aws-cdk/aws-logs';
 import {Topic} from '@aws-cdk/aws-sns';
 import {MANAGED_POLICIES} from 'cdk-constants';
+import {LogGroupWrapper} from './log-group-wrapper';
 
 export interface s3BackupStackProps {
-  alarmsTopicName: string;
+  alarmsTopic: Topic;
 }
 
 export class s3BackupStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: s3BackupStackProps) {
     super(scope, id);
-
-    const ERRORMETRICNAME = 's3BackupError';
-    const ERRORMETRICNAMESPACE = 'LogMetrics';
-    const REGION = cdk.Aws.REGION;
-    const ACCOUNTID = cdk.Aws.ACCOUNT_ID;
-    const ALARMSTOPICARN =
-        `arn:aws:sns:${REGION}:${ACCOUNTID}:${props.alarmsTopicName}`;
-    const ALARMSTOPIC =
-        Topic.fromTopicArn(this, props.alarmsTopicName, ALARMSTOPICARN);
 
     // IAM
     const readynas = new iam.User(this, 'readynas', {userName: 'readynas'});
@@ -44,56 +35,48 @@ export class s3BackupStack extends cdk.Stack {
     }
 
     readynas.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName(
-        MANAGED_POLICIES.CLOUD_WATCH_AGENT_SERVER_POLICY))
+        MANAGED_POLICIES.CLOUD_WATCH_AGENT_SERVER_POLICY));
 
     // Logs
-    const logGroup = new LogGroup(
-        this, 's3BackupLogGroup',
-        {logGroupName: '/var/log/s3-backup.log', retention: 14});
-
-    new MetricFilter(this, ERRORMETRICNAME, {
-      filterPattern: FilterPattern.anyTerm('error', 'Error'),
-      logGroup: logGroup,
-      metricValue: '1',
-      metricName: ERRORMETRICNAME,
-      metricNamespace: ERRORMETRICNAMESPACE
-    });
-
-    // Alarms
-    const alarms = [
-      new Alarm(this, 's3BackupErrorsAlarm', {
-        actionsEnabled: true,
-        alarmDescription:
-            'The S3 backup script has encountered an error. Please check the logs.',
-        threshold: 0,
-        comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
-        evaluationPeriods: 1,
-        metric: new Metric({
-          metricName: ERRORMETRICNAME,
-          namespace: ERRORMETRICNAMESPACE,
-          period: cdk.Duration.minutes(5)
-        })
+    const logGroups = [
+      new LogGroupWrapper(this, 's3Backup', {
+        logGroupName: '/var/log/s3-backup.log',
+        filterPattern: FilterPattern.anyTerm('error', 'Error'),
+        noLogsAlarm: {
+          enabled: true,
+          evaluationPeriods: 1,
+          metricPeriod: cdk.Duration.days(1),
+          threshold: 5
+        },
+        errorsAlarm: {
+          enabled: true,
+          evaluationPeriods: 1,
+          metricPeriod: cdk.Duration.minutes(5),
+          threshold: 1
+        }
       }),
-      new Alarm(this, 's3BackupNoLogsAlarm', {
-        actionsEnabled: true,
-        alarmDescription:
-            'The S3 backup script has not logged any errors in a while. Please check the logs.',
-        threshold: 5,
-        statistic: 'sum',
-        comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
-        evaluationPeriods: 1,
-        treatMissingData: TreatMissingData.BREACHING,
-        metric: new Metric({
-          metricName: 'IncomingLogEvents',
-          namespace: 'AWS/Logs',
-          period: cdk.Duration.days(1),
-          dimensions: {LogGroupName: logGroup.logGroupName}
-        })
+      new LogGroupWrapper(this, 'ansiblePull', {
+        logGroupName: '/var/log/ansible-pull.log',
+        filterPattern: FilterPattern.anyTerm('FAILED'),
+        noLogsAlarm: {
+          enabled: true,
+          evaluationPeriods: 4,
+          metricPeriod: cdk.Duration.hours(1),
+          threshold: 5
+        },
+        errorsAlarm: {
+          enabled: true,
+          evaluationPeriods: 1,
+          metricPeriod: cdk.Duration.minutes(5),
+          threshold: 1
+        }
       })
     ];
 
-    for (let alarm of alarms) {
-      alarm.addAlarmAction(new SnsAction(ALARMSTOPIC));
+    for (let group of logGroups) {
+      for (let alarm of group.alarms) {
+        alarm.addAlarmAction(new SnsAction(props.alarmsTopic));
+      }
     }
   }
 }
