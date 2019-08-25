@@ -25,6 +25,8 @@ export class LogGroupWrapper extends Construct {
 
     const errorMetricName = `${name}Errors`;
     const metricNamespace = 'LogMetrics';
+    const errorsAlarm = props.errorsAlarm;
+    const noLogsAlarm = props.noLogsAlarm;
 
     const logGroup = new LogGroup(
         this, `${name}LogGroup`, {logGroupName: props.logGroupName});
@@ -38,36 +40,41 @@ export class LogGroupWrapper extends Construct {
     });
 
     // Alarms
-    this.alarms = [
-      new Alarm(this, `${name}ErrorsAlarm`, {
+    this.alarms = [];
+    if (errorsAlarm.enabled) {
+      this.alarms.push(new Alarm(this, `${name}ErrorsAlarm`, {
         actionsEnabled: true,
         alarmDescription:
             `An error was found in the ${props.logGroupName} log group`,
-        threshold: props.errorsAlarm.threshold,
+        threshold: errorsAlarm.threshold,
         comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
-        evaluationPeriods: props.errorsAlarm.evaluationPeriods,
+        evaluationPeriods: errorsAlarm.evaluationPeriods,
         treatMissingData: TreatMissingData.NOT_BREACHING,
         metric: new Metric({
           metricName: errorMetricName,
           namespace: metricNamespace,
-          period: cdk.Duration.minutes(5)
+          period: errorsAlarm.metricPeriod,
         })
-      }),
-      new Alarm(this, `${name}NoLogsAlarm`, {
+      }));
+    }
+
+    if (noLogsAlarm.enabled) {
+      this.alarms.push(new Alarm(this, `${name}NoLogsAlarm`, {
         actionsEnabled: true,
         alarmDescription: `No logs have been found recently for the ${
             props.logGroupName} log group`,
-        threshold: props.noLogsAlarm.threshold,
-        comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
-        evaluationPeriods: props.noLogsAlarm.evaluationPeriods,
-        treatMissingData: TreatMissingData.NOT_BREACHING,
+        threshold: noLogsAlarm.threshold,
+        comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
+        evaluationPeriods: noLogsAlarm.evaluationPeriods,
+        treatMissingData: TreatMissingData.BREACHING,
+        statistic: 'sum',
         metric: new Metric({
           metricName: 'IncomingLogEvents',
           namespace: 'AWS/Logs',
-          period: cdk.Duration.minutes(5),
+          period: noLogsAlarm.metricPeriod,
           dimensions: {LogGroupName: logGroup.logGroupName}
         })
-      })
-    ];
+      }));
+    }
   }
 }
