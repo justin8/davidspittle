@@ -57,7 +57,7 @@ export class s3BackupStack extends cdk.Stack {
       }),
       new LogGroupWrapper(this, 'ansiblePull', {
         logGroupName: '/var/log/ansible-pull.log',
-        filterPattern: FilterPattern.anyTerm('FAILED'),
+        filterPattern: FilterPattern.anyTerm('FAILED', 'ERROR'),
         noLogsAlarm: {
           enabled: true,
           evaluationPeriods: 4,
