@@ -4,7 +4,7 @@
     s3_backup_bucket: davidspittlebackups
     s3_backup_schedule: daily
     s3_backup_folder_root: /data
-    s3_backup_folders:
+    s3_backup_foldersfdsafas
       - /PROJECTS_NAS
       - /dave_nas
       - /Dave_words
