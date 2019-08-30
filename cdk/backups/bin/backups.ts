@@ -8,7 +8,7 @@ const app = new cdk.App();
 const alarmsTopicName = 'alarmsTopic';
 
 const alarms = new alarmsStack(app, 'alarms-stack', {
-  alarmEmails: ['justin@dray.be'],
+  alarmEmails: ['justin@dray.be', 'ds@davidspittle.com'],
   alarmsTopicName: alarmsTopicName,
 });
 
