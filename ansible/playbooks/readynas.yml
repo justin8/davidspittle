@@ -6,7 +6,8 @@
     s3_backup_folder_root: /data
     s3_backup_folders:
       - /PROJECTS_NAS
-      - /foo
+      - /dave_nas
+      - /Dave_words
       - /Library_Dave
   roles:
     - role: s3-backup
