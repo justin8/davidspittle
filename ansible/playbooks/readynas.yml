@@ -9,6 +9,7 @@
       - /dave_nas
       - /Dave_words
       - /Library_Dave
+      - /Photos_Dave
   roles:
     - role: s3-backup
   tasks:
