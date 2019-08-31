@@ -41,7 +41,8 @@ export class s3BackupStack extends cdk.Stack {
     const logGroups = [
       new LogGroupWrapper(this, 's3Backup', {
         logGroupName: '/var/log/s3-backup.log',
-        filterPattern: FilterPattern.anyTerm('error', 'Error'),
+        filterPattern:
+            FilterPattern.anyTerm('error', 'Error', 'does not exist'),
         noLogsAlarm: {
           enabled: true,
           evaluationPeriods: 1,
