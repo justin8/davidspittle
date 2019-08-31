@@ -6,7 +6,7 @@
     s3_backup_folder_root: /data
     s3_backup_folders:
       - /PROJECTS_NAS
-      - /dave_nas
+      - /DAVE_NAS
       - /Dave_words
       - /Library_Dave
       - /Photos_Dave
