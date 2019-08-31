@@ -47,7 +47,8 @@ export class LogGroupWrapper extends Construct {
         alarmDescription:
             `An error was found in the ${props.logGroupName} log group`,
         threshold: errorsAlarm.threshold,
-        comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
+        comparisonOperator:
+            ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
         evaluationPeriods: errorsAlarm.evaluationPeriods,
         treatMissingData: TreatMissingData.NOT_BREACHING,
         metric: new Metric({

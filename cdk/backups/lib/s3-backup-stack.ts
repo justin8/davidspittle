@@ -66,7 +66,7 @@ export class s3BackupStack extends cdk.Stack {
         },
         errorsAlarm: {
           enabled: true,
-          evaluationPeriods: 1,
+          evaluationPeriods: 5,
           metricPeriod: cdk.Duration.minutes(5),
           threshold: 1
         }
