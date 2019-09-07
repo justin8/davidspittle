@@ -10,7 +10,6 @@
       - /Dave_words
       - /Library_Dave
       - /Photos_Dave
-      - /Projects_ARCHIVE
   roles:
     - role: s3-backup
   tasks:
