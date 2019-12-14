@@ -2,7 +2,7 @@
 import "source-map-support/register";
 import cdk = require("@aws-cdk/core");
 import { s3BackupStack } from "../lib/s3-backup-stack";
-import { alarmsStack } from "../lib/alarms-stack";
+import { alarmsStack } from "@justin8-cdk/alarms-stack";
 
 const app = new cdk.App();
 const alarmsTopicName = "alarmsTopic";
