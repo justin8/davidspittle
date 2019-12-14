@@ -5,7 +5,7 @@ import { PolicyStatement, ManagedPolicy } from "@aws-cdk/aws-iam";
 import { FilterPattern, LogGroup, MetricFilter } from "@aws-cdk/aws-logs";
 import { Topic } from "@aws-cdk/aws-sns";
 import { MANAGED_POLICIES } from "cdk-constants";
-import { LogGroupWrapper } from "./log-group-wrapper";
+import { LogGroupWrapper } from "@justin8-cdk/logwrapper";
 
 export interface s3BackupStackProps {
   alarmsTopic: Topic;
