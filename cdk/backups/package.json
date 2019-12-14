@@ -7,26 +7,28 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "cdk": "cdk"
+    "cdk": "AWS_DEFAULT_REGION=ap-southeast-2 AWS_PROFILE=davidspittle cdk"
   },
   "devDependencies": {
     "@types/node": "8.10.45",
-    "typescript": "^3.3.3333",
-    "ts-node": "^8.1.0",
-    "aws-cdk": "^1.4.0"
+    "aws-cdk": "^1.18.0",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.3"
   },
   "dependencies": {
-    "@aws-cdk/aws-cloudwatch": "^1.4.0",
-    "@aws-cdk/aws-cloudwatch-actions": "^1.4.0",
-    "@aws-cdk/aws-iam": "^1.4.0",
-    "@aws-cdk/aws-logs": "^1.4.0",
-    "@aws-cdk/aws-s3": "^1.4.0",
-    "@aws-cdk/aws-sns": "^1.4.0",
-    "@aws-cdk/core": "^1.4.0",
+    "@aws-cdk/aws-cloudwatch": "^1.18.0",
+    "@aws-cdk/aws-cloudwatch-actions": "^1.18.0",
+    "@aws-cdk/aws-iam": "^1.18.0",
+    "@aws-cdk/aws-logs": "^1.18.0",
+    "@aws-cdk/aws-s3": "^1.18.0",
+    "@aws-cdk/aws-sns": "^1.18.0",
+    "@aws-cdk/core": "^1.18.0",
+    "@justin8-cdk/alarms-stack": "^1.0.3",
+    "@justin8-cdk/logwrapper": "^1.0.3",
     "@microsoft/sp-tslint-rules": "^1.9.1",
     "cdk-constants": "^2.0.0",
-    "jshint": "^2.10.2",
-    "source-map-support": "^0.5.9",
-    "tslint": "^5.18.0"
+    "jshint": "^2.10.3",
+    "source-map-support": "^0.5.16",
+    "tslint": "^5.20.1"
   }
 }
