@@ -48,6 +48,7 @@ export class s3BackupStack extends cdk.Stack {
     const logGroups = [
       new LogGroupWrapper(this, "s3Backup", {
         logGroupName: "/var/log/s3-backup.log",
+        alarmsTopic: props.alarmsTopic,
         filterPattern: FilterPattern.anyTerm(
           "error",
           "Error",
@@ -69,6 +70,7 @@ export class s3BackupStack extends cdk.Stack {
       new LogGroupWrapper(this, "ansiblePull", {
         logGroupName: "/var/log/ansible-pull.log",
         filterPattern: FilterPattern.anyTerm("FAILED", "ERROR"),
+        alarmsTopic: props.alarmsTopic,
         noLogsAlarm: {
           enabled: true,
           evaluationPeriods: 4,
@@ -83,11 +85,5 @@ export class s3BackupStack extends cdk.Stack {
         }
       })
     ];
-
-    for (let group of logGroups) {
-      for (let alarm of group.alarms) {
-        alarm.addAlarmAction(new SnsAction(props.alarmsTopic));
-      }
-    }
   }
 }
