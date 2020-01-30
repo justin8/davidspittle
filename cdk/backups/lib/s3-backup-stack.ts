@@ -4,7 +4,7 @@ import { SnsAction } from "@aws-cdk/aws-cloudwatch-actions";
 import { PolicyStatement, ManagedPolicy } from "@aws-cdk/aws-iam";
 import { FilterPattern, LogGroup, MetricFilter } from "@aws-cdk/aws-logs";
 import { Topic } from "@aws-cdk/aws-sns";
-import { MANAGED_POLICIES } from "cdk-constants";
+import { ManagedPolicies } from "cdk-constants";
 import { LogGroupWrapper } from "@justin8-cdk/logwrapper";
 
 export interface s3BackupStackProps {
@@ -40,7 +40,7 @@ export class s3BackupStack extends cdk.Stack {
 
     readynas.addManagedPolicy(
       ManagedPolicy.fromAwsManagedPolicyName(
-        MANAGED_POLICIES.CLOUD_WATCH_AGENT_SERVER_POLICY
+        ManagedPolicies.CLOUD_WATCH_AGENT_SERVER_POLICY
       )
     );
 
@@ -72,7 +72,6 @@ export class s3BackupStack extends cdk.Stack {
         logGroupName: "/var/log/ansible-pull.log",
         alarmsTopic: props.alarmsTopic,
         filterPattern: FilterPattern.anyTerm("FAILED", "ERROR"),
-        alarmsTopic: props.alarmsTopic,
         noLogsAlarm: {
           enabled: true,
           evaluationPeriods: 4,
