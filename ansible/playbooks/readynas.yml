@@ -18,6 +18,10 @@
         src: awslogs.conf.j2
         dest: /var/awslogs/etc/awslogs.conf
       notify: restart awslogs
+    - name: install aws cli
+      pip:
+        name: awscli
+        state: latest
 
   handlers:
     - name: restart awslogs
