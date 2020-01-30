@@ -52,7 +52,8 @@ export class s3BackupStack extends cdk.Stack {
         filterPattern: FilterPattern.anyTerm(
           "error",
           "Error",
-          "does not exist"
+          "does not exist",
+          "command not found"
         ),
         noLogsAlarm: {
           enabled: true,
@@ -69,6 +70,7 @@ export class s3BackupStack extends cdk.Stack {
       }),
       new LogGroupWrapper(this, "ansiblePull", {
         logGroupName: "/var/log/ansible-pull.log",
+        alarmsTopic: props.alarmsTopic,
         filterPattern: FilterPattern.anyTerm("FAILED", "ERROR"),
         alarmsTopic: props.alarmsTopic,
         noLogsAlarm: {
